@@ -23,13 +23,13 @@ class PENNet:
         self.epochs = 1000000
         self.mask_size = [128, 128]
         self.img_size = [256, 256, 3]
-        self.batch_size = 8
+        self.batch_size = 1
         self.save_interval = 200
         self.acc_mask_size = 2
         self.mask_update_interval = 500
         self.optimizer = Adam(0.0001, 0.5, 0.999)
         self.loss_weights = [1, 15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
-        self.previous_epoch = 0
+        self.previous_epoch=0
         self.data_loader=data_loader(self.dataset_path,self.batch_size)
 
         # used for ensure the output is valid for the discriminator
@@ -42,6 +42,10 @@ class PENNet:
             self.Generator.load_weights("./models/Generator_weights.h5")
             self.Combined_Model.load_weights("./models/Combined_Model_weights.h5")
             print("Finished Loading Saved Model weights!")
+            if os.path.exists("./models/epoch.txt"):
+                with open("./models/epoch.txt", "r") as f:
+                    self.previous_epoch = int(f.readline())
+
         print("Compiling models....")
 
         if self.Is_Plot_Model:
@@ -61,16 +65,6 @@ class PENNet:
                                     optimizer=self.optimizer)
         print("Initializing Models.....")
         self.Initialize_Model()
-    # def Avg_Output(self,map):
-    #     batch_size = map.get_shape().as_list()[0]
-    #     if batch_size == 1:
-    #         output = tf.expand_dims(tf.expand_dims(tf.reduce_mean(map), axis=[0]), axis=-1)
-    #     else:
-    #         map_group = tf.split(map, batch_size, axis=0)
-    #         output = tf.expand_dims(tf.reduce_mean(map_group[0]), axis=0)
-    #         for i in range(batch_size - 1):
-    #             output = tf.concat([output, tf.expand_dims(tf.reduce_mean(map_group[i + 1]), axis=0)], axis=0)
-    #     return output
 
     def build_discriminator(self, input_shape, use_sigmoid=False, cnum=64):
         input = Input(batch_shape=input_shape)
@@ -283,13 +277,15 @@ class PENNet:
     def save_model(self):
         if not os.path.exists("./models"):  # 如果路径不存在
             os.makedirs("./models")
+        with open("./models/epoch.txt", "w") as f:
+            f.write(str(self.current_epoch))
+
         self.Generator.save_weights('./models/Generator_weights.h5')
         self.Discriminator.save('./models/Discriminator_full.h5')
         self.Combined_Model.save_weights('./models/Combined_Model_weights.h5')
 
     def train(self):
         print("Start_training....")
-
         valid = np.ones(shape=[self.batch_size, 16, 16, 1])
         fake = np.zeros(shape=[self.batch_size, 16, 16, 1])
 
@@ -297,6 +293,7 @@ class PENNet:
         Batch_Img = self.load_data_norm()
         for epoch in range(self.epochs + 1):
             epoch = epoch + self.previous_epoch
+            self.current_epoch=epoch
             try:
                 if Batch_Img == None:
                     Batch_Img = self.load_data_norm()
