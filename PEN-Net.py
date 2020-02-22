@@ -1,21 +1,12 @@
-
 import matplotlib.pyplot as plt
-from keras.utils import plot_model
-from keras import Sequential, Input, Model
-from keras.backend.numpy_backend import concatenate
-from keras.engine.saving import load_model
-from keras.layers import Conv2D, LeakyReLU, ReLU, UpSampling2D, Dense, Flatten, Dropout, BatchNormalization, \
-    ZeroPadding2D
-from keras import backend as K
 import tensorflow as tf
+# from keras.utils import plot_model
+from keras import Sequential, Input, Model
+from keras.engine.saving import load_model
 from keras.layers import Concatenate
 from keras.optimizers import Adam
-from tensorflow.contrib.framework.python.ops import add_arg_scope
 import scipy.misc
-from keras import Input, Model
-from keras.layers import Lambda, Conv2D, LeakyReLU, Activation
-
-
+from keras.layers import Lambda, Conv2D, LeakyReLU, Activation, UpSampling2D
 from core.multi_thread import *
 from core import SpectralNormalization as sp
 from core.ATN_layer import ATNConv
@@ -26,13 +17,13 @@ from core.data_loader import *
 class PENNet:
     def __init__(self):
         self.Is_trainning = True
-        self.Is_Auto_Loading = False
+        self.Is_Auto_Loading = True
         self.Is_Plot_Model=False
         self.dataset_path = "./dataset"
         self.epochs = 1000000
         self.mask_size = [128, 128]
         self.img_size = [256, 256, 3]
-        self.batch_size = 1
+        self.batch_size = 8
         self.save_interval = 200
         self.acc_mask_size = 2
         self.mask_update_interval = 500
@@ -41,26 +32,25 @@ class PENNet:
         self.previous_epoch = 0
         self.data_loader=data_loader(self.dataset_path,self.batch_size)
 
-        print("Initializing Models.....")
-
         # used for ensure the output is valid for the discriminator
         self.Combined_Model, self.Generator, self.Discriminator = self.build_model(
             [(self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2] + 1),
              (self.batch_size, self.img_size[0], self.img_size[1], 1)])
-        if os.path.exists("./Models/Discriminator_full.h5") and self.Is_Auto_Loading:
+        if os.path.exists("./models/Discriminator_full.h5") and self.Is_Auto_Loading:
             print("Loading Saved Model weights.....")
-            self.Discriminator = load_model("./Models/Discriminator_full.h5")
-            self.Generator.load_weights("./Models/Generator_weights.h5")
-            self.Combined_Model.load_weights("./Models/Combined_Model_weights.h5")
+            self.Discriminator = load_model("./models/Discriminator_full.h5")
+            self.Generator.load_weights("./models/Generator_weights.h5")
+            self.Combined_Model.load_weights("./models/Combined_Model_weights.h5")
             print("Finished Loading Saved Model weights!")
-        print("Compiling Models....")
+        print("Compiling models....")
 
         if self.Is_Plot_Model:
-            if not os.path.exists("./Models/Model_Structure"):  # 如果路径不存在
-                os.makedirs("./Models/Model_Structure")
-            plot_model(self.Combined_Model, to_file='./Models/Model_Structure/Combined_Model.png')
-            plot_model(self.Generator, to_file='./Models/Model_Structure/Generator.png')
-            plot_model(self.Discriminator, to_file='./Models/Model_Structure/Discriminator.png')
+            pass
+            # if not os.path.exists("./models/Model_Structure"):  # 如果路径不存在
+            #     os.makedirs("./models/Model_Structure")
+            # plot_model(self.Combined_Model, to_file='./models/Model_Structure/Combined_Model.png')
+            # plot_model(self.Generator, to_file='./models/Model_Structure/Generator.png')
+            # plot_model(self.Discriminator, to_file='./models/Model_Structure/Discriminator.png')
 
 
         self.Discriminator.compile(loss='mse',
@@ -69,7 +59,8 @@ class PENNet:
         self.Combined_Model.compile(loss=['mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mse'],
                                     loss_weights=self.loss_weights,
                                     optimizer=self.optimizer)
-
+        print("Initializing Models.....")
+        self.Initialize_Model()
     # def Avg_Output(self,map):
     #     batch_size = map.get_shape().as_list()[0]
     #     if batch_size == 1:
@@ -218,15 +209,15 @@ class PENNet:
         name_g = "generated_epoch_" + str(epcho) + ".png"
         name_decoding = "decoding_epoch_" + str(epcho) + ".png"
         name_real_out = "real_output_epoch_" + str(epcho) + ".png"
-        path_g = "./Generated_Imgs/" + name_g
-        path_decoding = "./Generated_Imgs/Decoding_Imgs/" + name_decoding
-        path_realout = "./Generated_Imgs/Real_Output_Imgs/" + name_real_out
-        if not os.path.exists("./Generated_Imgs"):  # 如果路径不存在
-            os.makedirs("./Generated_Imgs")
-        if not os.path.exists("./Generated_Imgs/Decoding_Imgs"):  # 如果路径不存在
-            os.makedirs("./Generated_Imgs/Decoding_Imgs")
-        if not os.path.exists("./Generated_Imgs/Real_Output_Imgs/"):  # 如果路径不存在
-            os.makedirs("./Generated_Imgs/Real_Output_Imgs/")
+        path_g = "./generated_Imgs/" + name_g
+        path_decoding = "./generated_Imgs/Decoding_Imgs/" + name_decoding
+        path_realout = "./generated_Imgs/Real_Output_Imgs/" + name_real_out
+        if not os.path.exists("./generated_Imgs"):  # 如果路径不存在
+            os.makedirs("./generated_Imgs")
+        if not os.path.exists("./generated_Imgs/Decoding_Imgs"):  # 如果路径不存在
+            os.makedirs("./generated_Imgs/Decoding_Imgs")
+        if not os.path.exists("./generated_Imgs/Real_Output_Imgs/"):  # 如果路径不存在
+            os.makedirs("./generated_Imgs/Real_Output_Imgs/")
         Batch_Img = self.load_data_norm()
         # Masked_Img_Batch, Masks = Centre_Mask(Batch_Img, mask_size)
         Masked_Img_Batch, Masks = Random_Rectangle_Mask(Batch_Img, mask_size)
@@ -290,15 +281,15 @@ class PENNet:
         plt.imsave(path_realout, np.clip(Output_Img[0], 0, 1), format="png")
 
     def save_model(self):
-        if not os.path.exists("./Models"):  # 如果路径不存在
-            os.makedirs("./Models")
-        self.Generator.save_weights('./Models/Generator_weights.h5')
-        self.Discriminator.save('./Models/Discriminator_full.h5')
-        self.Combined_Model.save_weights('./Models/Combined_Model_weights.h5')
+        if not os.path.exists("./models"):  # 如果路径不存在
+            os.makedirs("./models")
+        self.Generator.save_weights('./models/Generator_weights.h5')
+        self.Discriminator.save('./models/Discriminator_full.h5')
+        self.Combined_Model.save_weights('./models/Combined_Model_weights.h5')
 
     def train(self):
         print("Start_training....")
-        self.Initialize_Model()
+
         valid = np.ones(shape=[self.batch_size, 16, 16, 1])
         fake = np.zeros(shape=[self.batch_size, 16, 16, 1])
 
@@ -311,7 +302,7 @@ class PENNet:
                     Batch_Img = self.load_data_norm()
             except:
                 pass
-            load_thread = LoadingThread(eval('Load_data_norm'), args=(self.batch_size,))
+            load_thread = LoadingThread(eval('self.load_data_norm'))
             load_thread.start()
             # train Discriminator
 
@@ -353,38 +344,45 @@ class PENNet:
                     self.mask_size = [128, 128]
 
             Batch_Img = load_thread.get_result()
-    def test_console_app(self):
+    def test_console_app(self,Is_saving=True):
         from time import time
         name_num=0
+        print("Start test console app!\n")
         while True:
-            a = input("Continue? y/n")
+            a = input("Continue? y/n \n")
             if a == "y":
-                print("continue!")
-            else:
-                print("end")
+                try:
+                    img_path = input("Please enter the path of the img that you are going to test:\n")
+                    img = np.array(scipy.misc.imread(img_path, mode='RGB').astype(np.float))
+                    start_time = time()
+                    img = scipy.misc.imresize(img, self.img_size)
+                    input_img, input_mask = GenerateValidInputImg(img)
+                    input_img = np.clip((input_img + 5 * input_mask), 0, 1)
+                    # plt.imshow(input_mask[0,:,:,0],cmap="gray")
+                    # plt.show()
+                    Output_Img, Masked_Img, UnMasked_Img, Img1, Img2, Img3, Img4, Img5 = self.Generator.predict(
+                        [input_img, input_mask])
+                    plt.imshow(Output_Img[0])
+                    plt.axis("off")
+                    if Is_saving:
+                        plt.pause(1)
+                        if not os.path.exists("./generated_Imgs/test_app"):  # 如果路径不存在
+                            os.makedirs("./generated_Imgs/test_app")
+                        plt.imsave("./generated_Imgs/test_app/processed_test_" + str(name_num) + ".png",
+                                   np.clip(Output_Img[0], 0, 1))
+                        print("Finished! Used time:"+str(time()-start_time)+"s!\n")
+                        name_num = name_num + 1
+                    else:
+                        plt.show()
+                except:
+                    print("Invalid input!")
+            elif a=="n":
+                print("exit")
                 break
+            else:
+                print("Please enter y/n!\n")
+                continue
 
-            try:
-                img_path = input("Please enter the path of the img that you are going to test:")
-                img = np.array(scipy.misc.imread(img_path, mode='RGB').astype(np.float))
-            except:
-                print("Invalid input!")
-            start_time=time()
-            img = scipy.misc.imresize(img, self.img_size)
-            input_img, input_mask = GenerateValidInputImg(img)
-            input_img = np.clip((input_img + 5 * input_mask), 0, 1)
-            # plt.imshow(input_mask[0,:,:,0],cmap="gray")
-            # plt.show()
-            Output_Img, Masked_Img, UnMasked_Img, Img1, Img2, Img3, Img4, Img5 = self.Generator.predict(
-                [input_img, input_mask])
-            plt.imshow(Output_Img[0])
-            plt.axis("off")
-            # plt.pause(1)
-            if not os.path.exists("./Generated_Imgs/test_app"):  # 如果路径不存在
-                os.makedirs("./Generated_Imgs/test_app")
-            plt.imsave("./Generated_Imgs/test_app/processed_test_" + str(name_num) + ".png", np.clip(Output_Img[0], 0, 1))
-            print("Finished! Used time:"+str(time()-start_time))+"s!"
-            name_num = name_num + 1
 
 def Config_GPU():
     config = tf.ConfigProto()
@@ -395,5 +393,5 @@ def Config_GPU():
 if __name__ == "__main__":
     Config_GPU()
     pennet = PENNet()
-    pennet.train()
+    # pennet.train()
     pennet.test_console_app()
