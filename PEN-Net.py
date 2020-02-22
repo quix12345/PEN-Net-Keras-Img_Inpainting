@@ -1,8 +1,5 @@
-import os
+
 import matplotlib.pyplot as plt
-import keras
-import numpy as np
-import math
 from keras.utils import plot_model
 from keras import Sequential, Input, Model
 from keras.backend.numpy_backend import concatenate
@@ -11,46 +8,46 @@ from keras.layers import Conv2D, LeakyReLU, ReLU, UpSampling2D, Dense, Flatten, 
     ZeroPadding2D
 from keras import backend as K
 import tensorflow as tf
-from keras.layers import Input, Lambda, Conv2D, Concatenate
+from keras.layers import Concatenate
 from keras.optimizers import Adam
 from tensorflow.contrib.framework.python.ops import add_arg_scope
 import scipy.misc
 from keras import Input, Model
 from keras.layers import Lambda, Conv2D, LeakyReLU, Activation
-import keras.backend as K
-import numpy as np
-from batch_data_loader import *
-import threading
 
+
+from core.multi_thread import *
 from core import SpectralNormalization as sp
 from core.ATN_layer import ATNConv
 from core.mask_processing import *
 from core.utils import *
-
+from core.data_loader import *
 
 class PENNet:
     def __init__(self):
         self.Is_trainning = True
-        self.Is_using = False
-        self.dataset_path = "C:/Users/qxdnf/PycharmProjects/tensorflow_xuexi1/PEN-Net-Keras/facade_imgs"
-        self.mask_size = [128, 128]
+        self.Is_Auto_Loading = False
+        self.Is_Plot_Model=False
+        self.dataset_path = "./dataset"
         self.epochs = 1000000
+        self.mask_size = [128, 128]
         self.img_size = [256, 256, 3]
         self.batch_size = 1
         self.save_interval = 200
         self.acc_mask_size = 2
         self.mask_update_interval = 500
         self.optimizer = Adam(0.0001, 0.5, 0.999)
+        self.loss_weights = [1, 15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         self.previous_epoch = 0
+        self.data_loader=data_loader(self.dataset_path,self.batch_size)
 
         print("Initializing Models.....")
-        self.Config_GPU()
 
         # used for ensure the output is valid for the discriminator
         self.Combined_Model, self.Generator, self.Discriminator = self.build_model(
             [(self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2] + 1),
              (self.batch_size, self.img_size[0], self.img_size[1], 1)])
-        if os.path.exists("./Models/Discriminator_full.h5") and self.Is_using == True:
+        if os.path.exists("./Models/Discriminator_full.h5") and self.Is_Auto_Loading:
             print("Loading Saved Model weights.....")
             self.Discriminator = load_model("./Models/Discriminator_full.h5")
             self.Generator.load_weights("./Models/Generator_weights.h5")
@@ -58,7 +55,14 @@ class PENNet:
             print("Finished Loading Saved Model weights!")
         print("Compiling Models....")
 
-        self.loss_weights = [1, 15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        if self.Is_Plot_Model:
+            if not os.path.exists("./Models/Model_Structure"):  # 如果路径不存在
+                os.makedirs("./Models/Model_Structure")
+            plot_model(self.Combined_Model, to_file='./Models/Model_Structure/Combined_Model.png')
+            plot_model(self.Generator, to_file='./Models/Model_Structure/Generator.png')
+            plot_model(self.Discriminator, to_file='./Models/Model_Structure/Discriminator.png')
+
+
         self.Discriminator.compile(loss='mse',
                                    optimizer=Adam(0.0001, 0.5, 0.999),
                                    metrics=['accuracy'])
@@ -186,6 +190,13 @@ class PENNet:
         Combined_Model.summary()
         return Combined_Model, Generator, Discriminator
 
+    def Initialize_Model(self):
+        # To prevent the "FailedPreconditionError"
+        Batch_Img_Initialize = img255_normalization(
+            np.ones([self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2]]))
+        Masked_Img_Batch_Initialize, Masks_Initialize = Centre_Mask(Batch_Img_Initialize, self.mask_size)
+        return self.Generated_Img(Masked_Img_Batch_Initialize, Masks_Initialize)[0]
+
     def Generated_Img(self, Img, Masks):
         Masked_Imgs = Masked_Img(Img, Masks)
         Org_Predicted_Imgs = self.Generator.predict([Img2Img_with_mask(Masked_Imgs, Masks), Masks])[0]
@@ -199,9 +210,8 @@ class PENNet:
         # plt.show()
         return Output
 
-    def Load_data_norm(self, batch_size):
-        # Batch_Img = Load_data(batch_size,dataset_path,[256,256])
-        Batch_Img = Load_from_rawdata(batch_size)
+    def load_data_norm(self):
+        Batch_Img = self.data_loader.load_facade()
         return img255_normalization(Batch_Img)
 
     def save_imgs(self, epcho, mask_size):
@@ -217,7 +227,7 @@ class PENNet:
             os.makedirs("./Generated_Imgs/Decoding_Imgs")
         if not os.path.exists("./Generated_Imgs/Real_Output_Imgs/"):  # 如果路径不存在
             os.makedirs("./Generated_Imgs/Real_Output_Imgs/")
-        Batch_Img = Load_data_norm(self.batch_size)
+        Batch_Img = self.load_data_norm()
         # Masked_Img_Batch, Masks = Centre_Mask(Batch_Img, mask_size)
         Masked_Img_Batch, Masks = Random_Rectangle_Mask(Batch_Img, mask_size)
         # Real_Output=Generated_Img(Batch_Img,Masks)
@@ -291,32 +301,27 @@ class PENNet:
         self.Initialize_Model()
         valid = np.ones(shape=[self.batch_size, 16, 16, 1])
         fake = np.zeros(shape=[self.batch_size, 16, 16, 1])
-        # valid = np.ones((batch_size, 1))
-        # fake = np.zeros((batch_size, 1))
-        epoch_list = []
-        G_loss_list = []
+
         # follow multi-thread approach to read data
-        Batch_Img = Load_data_norm(self.batch_size)
-        # Real_img = Load_data_norm(batch_size)
+        Batch_Img = self.load_data_norm()
         for epoch in range(self.epochs + 1):
             epoch = epoch + self.previous_epoch
             try:
                 if Batch_Img == None:
-                    Batch_Img = Load_data_norm(self.batch_size)
+                    Batch_Img = self.load_data_norm()
             except:
                 pass
-            load_thread1 = LoadingThread(eval('Load_data_norm'), args=(self.batch_size,))
-            load_thread1.start()
-            # load_thread2 = LoadingThread(eval('Load_data_norm'), args=(batch_size,))
-            # load_thread2.start()
+            load_thread = LoadingThread(eval('Load_data_norm'), args=(self.batch_size,))
+            load_thread.start()
             # train Discriminator
 
             # useless when using the multi-thread
+
             # Batch_Img = Load_data_norm(batch_size)
             # Real_img=Load_data_norm(batch_size)
 
             # use a advanced model to generate mask instead of the simple centre mask one
-            Masked_Img_Batch, Masks = Random_Rectangle_Mask(Batch_Img, mask_size)
+            Masked_Img_Batch, Masks = Random_Rectangle_Mask(Batch_Img, self.mask_size)
             # Masked_Img_Batch, Masks=Centre_Mask(Batch_Img, mask_size)
             Fake_img = self.Generated_Img(Masked_Img_Batch, Masks)
             # Fake_img=Generator.predict(Img2Img_with_mask(Masked_Img_Batch,Masks), Masks)[0]
@@ -332,34 +337,54 @@ class PENNet:
                                                          Resized_Imgs[1], Resized_Imgs[2],
                                                          Resized_Imgs[3], Resized_Imgs[4], Resized_Imgs[5],
                                                          valid])
-            G_loss_list.append(G_loss[6])
-
             print("%d [D loss: %f, acc.: %.2f%%] [G L1 loss: %f , Adv loss: %f]" % (
                 epoch, D_loss[0], 100 * D_loss[1], G_loss[0], G_loss[6]))
 
             # If at save interval => save generated image samples
             if epoch % self.save_interval == 0:
-                print(np.mean(self.Discriminator.predict(Load_data_norm(1))))
                 print("Saving Models....")
-                self.save_imgs(epoch, mask_size)
+                self.save_imgs(epoch, self.mask_size)
                 if epoch != 0:
                     self.save_model()
             if epoch % self.mask_update_interval == 0 and epoch != 0 and self.acc_mask_size >= 0:
-                mask_size[0] = mask_size[0] + self.acc_mask_size
-                mask_size[1] = mask_size[1] + self.acc_mask_size
-                if mask_size[0] >= 128:
-                    mask_size = [128, 128]
+                self.mask_size[0] = self.mask_size[0] + self.acc_mask_size
+                self.mask_size[1] = self.mask_size[1] + self.acc_mask_size
+                if self.mask_size[0] >= 128:
+                    self.mask_size = [128, 128]
 
-            Batch_Img = load_thread1.get_result()
-            # Real_img = load_thread2.get_result()
+            Batch_Img = load_thread.get_result()
+    def test_console_app(self):
+        from time import time
+        name_num=0
+        while True:
+            a = input("Continue? y/n")
+            if a == "y":
+                print("continue!")
+            else:
+                print("end")
+                break
 
-    def Initialize_Model(self):
-        # To prevent the "FailedPreconditionError"
-        Batch_Img_Initialize = img255_normalization(
-            np.ones([self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2]]))
-        Masked_Img_Batch_Initialize, Masks_Initialize = Centre_Mask(Batch_Img_Initialize, self.mask_size)
-        self.Generated_Img(Masked_Img_Batch_Initialize, Masks_Initialize)[0]
-
+            try:
+                img_path = input("Please enter the path of the img that you are going to test:")
+                img = np.array(scipy.misc.imread(img_path, mode='RGB').astype(np.float))
+            except:
+                print("Invalid input!")
+            start_time=time()
+            img = scipy.misc.imresize(img, self.img_size)
+            input_img, input_mask = GenerateValidInputImg(img)
+            input_img = np.clip((input_img + 5 * input_mask), 0, 1)
+            # plt.imshow(input_mask[0,:,:,0],cmap="gray")
+            # plt.show()
+            Output_Img, Masked_Img, UnMasked_Img, Img1, Img2, Img3, Img4, Img5 = self.Generator.predict(
+                [input_img, input_mask])
+            plt.imshow(Output_Img[0])
+            plt.axis("off")
+            # plt.pause(1)
+            if not os.path.exists("./Generated_Imgs/test_app"):  # 如果路径不存在
+                os.makedirs("./Generated_Imgs/test_app")
+            plt.imsave("./Generated_Imgs/test_app/processed_test_" + str(name_num) + ".png", np.clip(Output_Img[0], 0, 1))
+            print("Finished! Used time:"+str(time()-start_time))+"s!"
+            name_num = name_num + 1
 
 def Config_GPU():
     config = tf.ConfigProto()
@@ -368,5 +393,7 @@ def Config_GPU():
 
 
 if __name__ == "__main__":
+    Config_GPU()
     pennet = PENNet()
     pennet.train()
+    pennet.test_console_app()
