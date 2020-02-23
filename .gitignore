@@ -7,3 +7,4 @@ models/Generator_weights.h5
 *.h5
 models/epoch.txt
 models/epoch.txt
+models/epoch.txt
