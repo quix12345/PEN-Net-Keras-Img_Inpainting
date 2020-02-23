@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26606e6e-2dc0-4739-9bef-8df7c75c7ce5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/epoch.txt" beforeDir="false" afterPath="$PROJECT_DIR$/models/epoch.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,10 +17,9 @@
         <entry file="file://$PROJECT_DIR$/PEN-Net.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="506">
-              <caret line="462" selection-start-line="462" selection-end-line="462" />
+              <caret line="464" selection-start-line="464" selection-end-line="464" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
-                <element signature="e#19489#22413#0" />
               </folding>
             </state>
           </provider>
@@ -32,7 +32,6 @@
               <caret column="5" selection-start-column="5" selection-end-column="5" />
             </state>
           </provider>
-
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -128,7 +127,6 @@
       <find>Models</find>
       <find>save</find>
       <find>Is_trainning</find>
-
     </findStrings>
     <replaceStrings>
       <replace>generated_Imgs</replace>
@@ -182,6 +180,11 @@
               <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
               <item name="PEN-Net-Keras-Img-Inpainting" type="462c0819:PsiDirectoryNode" />
               <item name="generated_Imgs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PEN-Net-Keras-Img-Inpainting" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
@@ -258,7 +261,6 @@
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22523117" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -281,17 +283,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PEN-Net.py</url>
-          <line>42</line>
+          <line>37</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PEN-Net.py</url>
-          <line>54</line>
+          <line>50</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PEN-Net.py</url>
-          <line>335</line>
+          <line>292</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
@@ -385,7 +387,7 @@
     <entry file="file://$PROJECT_DIR$/PEN-Net.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
-          <caret line="462" selection-start-line="462" selection-end-line="462" />
+          <caret line="464" selection-start-line="464" selection-end-line="464" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
