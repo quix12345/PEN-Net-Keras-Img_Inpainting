@@ -36,6 +36,7 @@ class PENNet:
         self.previous_epoch = 0
         self.data_loader = data_loader(self.dataset_path, self.batch_size)
 
+
         # used for ensure the output is valid for the discriminator
         self.Combined_Model, self.Generator, self.Discriminator = self.build_model(
             [(self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2] + 1),
@@ -337,6 +338,7 @@ class PENNet:
         for epoch in range(self.epochs + 1):
             epoch = epoch + self.previous_epoch
             self.current_epoch = epoch
+
             try:
                 if Batch_Img == None:
                     Batch_Img = self.load_data_norm()
