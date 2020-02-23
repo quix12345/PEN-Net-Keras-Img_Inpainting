@@ -1,12 +1,5 @@
 
 *.png
-*.png
-models/Discriminator_full.h5
-models/Combined_Model_weights.h5
-models/Generator_weights.h5
 *.h5
-models/epoch.txt
-models/epoch.txt
-models/epoch.txt
 *.pyc
-models/epoch.txt
+models/
