@@ -2,6 +2,10 @@ import tensorflow as tf
 from keras import Model, Input
 from keras.layers import Conv2D, Concatenate, Lambda
 
+"""
+Attention transfer network (layer)
+"""
+
 
 def resize(x, scale=2, to_shape=None, align_corners=True, dynamic=False,
            func=tf.compat.v1.image.resize_bilinear, name='resize'):
@@ -91,6 +95,7 @@ def ATN_layer(input, ksize=3, stride=1, rate=2,
     if rescale:
         y = resize(y, scale=2., func=tf.image.resize_nearest_neighbor)
     return y
+
 
 def ATNConv(intx1_shape, intx2_shape, mask_shape, ksize=3, fuse=True):
     assert mask_shape[-1] == 1, "Mask can only have 1 channel!"

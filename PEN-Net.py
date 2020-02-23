@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import tensorflow as tf
-# from keras.utils import plot_model
+from keras.utils import plot_model
 from keras import Sequential, Input, Model
 from keras.engine.saving import load_model
 from keras.layers import Concatenate
@@ -14,23 +14,27 @@ from core.mask_processing import *
 from core.utils import *
 from core.data_loader import *
 
+
 class PENNet:
     def __init__(self):
-        self.Is_trainning = True
+        """
+        Initialize the whole PEN-Net!
+        """
         self.Is_Auto_Loading = True
-        self.Is_Plot_Model=False
+        self.Is_Plot_Model = True
+        self.Is_debug_discri=False
         self.dataset_path = "./dataset"
         self.epochs = 1000000
         self.mask_size = [128, 128]
         self.img_size = [256, 256, 3]
-        self.batch_size = 8
+        self.batch_size = 1
         self.save_interval = 200
         self.acc_mask_size = 2
         self.mask_update_interval = 500
         self.optimizer = Adam(0.0001, 0.5, 0.999)
-        self.loss_weights = [1, 15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        self.loss_weights = [1, 6, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         self.previous_epoch = 0
-        self.data_loader=data_loader(self.dataset_path,self.batch_size)
+        self.data_loader = data_loader(self.dataset_path, self.batch_size)
 
         # used for ensure the output is valid for the discriminator
         self.Combined_Model, self.Generator, self.Discriminator = self.build_model(
@@ -42,16 +46,19 @@ class PENNet:
             self.Generator.load_weights("./models/Generator_weights.h5")
             self.Combined_Model.load_weights("./models/Combined_Model_weights.h5")
             print("Finished Loading Saved Model weights!")
+            if os.path.exists("./models/epoch.txt"):
+                with open("./models/epoch.txt", "r") as f:
+                    self.previous_epoch = int(f.readline())
+
         print("Compiling models....")
 
         if self.Is_Plot_Model:
             pass
-            # if not os.path.exists("./models/Model_Structure"):  # 如果路径不存在
-            #     os.makedirs("./models/Model_Structure")
-            # plot_model(self.Combined_Model, to_file='./models/Model_Structure/Combined_Model.png')
-            # plot_model(self.Generator, to_file='./models/Model_Structure/Generator.png')
-            # plot_model(self.Discriminator, to_file='./models/Model_Structure/Discriminator.png')
-
+            if not os.path.exists("./models/Model_Structure"):  # 如果路径不存在
+                os.makedirs("./models/Model_Structure")
+            plot_model(self.Combined_Model, to_file='./models/Model_Structure/Combined_Model.png')
+            plot_model(self.Generator, to_file='./models/Model_Structure/Generator.png')
+            plot_model(self.Discriminator, to_file='./models/Model_Structure/Discriminator.png')
 
         self.Discriminator.compile(loss='mse',
                                    optimizer=Adam(0.0001, 0.5, 0.999),
@@ -61,18 +68,15 @@ class PENNet:
                                     optimizer=self.optimizer)
         print("Initializing Models.....")
         self.Initialize_Model()
-    # def Avg_Output(self,map):
-    #     batch_size = map.get_shape().as_list()[0]
-    #     if batch_size == 1:
-    #         output = tf.expand_dims(tf.expand_dims(tf.reduce_mean(map), axis=[0]), axis=-1)
-    #     else:
-    #         map_group = tf.split(map, batch_size, axis=0)
-    #         output = tf.expand_dims(tf.reduce_mean(map_group[0]), axis=0)
-    #         for i in range(batch_size - 1):
-    #             output = tf.concat([output, tf.expand_dims(tf.reduce_mean(map_group[i + 1]), axis=0)], axis=0)
-    #     return output
 
     def build_discriminator(self, input_shape, use_sigmoid=False, cnum=64):
+        """
+        Build up the Markovian Discriminator
+        :param input_shape: Input shape
+        :param use_sigmoid: whether use the sigmoid activation function at the end
+        :param cnum: channel number
+        :return:
+        """
         input = Input(batch_shape=input_shape)
         dkernel_size = 5
         x = sp.SpectralNormalization(
@@ -101,6 +105,12 @@ class PENNet:
         return Discriminator
 
     def build_model(self, input_shape, cnum=32):
+        """
+        Build up the PEN-Net structure(Discriminator,Generator and Combined Model)
+        :param input_shape: Input Shape for the PEN-Net (channel[0:2] for Img,channel[-1] for mask)
+        :param cnum: Conv channel number
+        :return: Discriminator,Generator and Combined Model
+        """
         img_input = Input(batch_shape=input_shape[0])
         mask_input = Input(batch_shape=input_shape[1])
         img_shape = [input_shape[0][0], input_shape[0][1], input_shape[0][2], input_shape[0][3] - 1]
@@ -182,13 +192,22 @@ class PENNet:
         return Combined_Model, Generator, Discriminator
 
     def Initialize_Model(self):
-        # To prevent the "FailedPreconditionError"
+        """
+        To prevent the "FailedPreconditionError"
+        :return: Useless data
+        """
         Batch_Img_Initialize = img255_normalization(
             np.ones([self.batch_size, self.img_size[0], self.img_size[1], self.img_size[2]]))
         Masked_Img_Batch_Initialize, Masks_Initialize = Centre_Mask(Batch_Img_Initialize, self.mask_size)
         return self.Generated_Img(Masked_Img_Batch_Initialize, Masks_Initialize)[0]
 
     def Generated_Img(self, Img, Masks):
+        """
+        Generate the final PEN-Net output with the input Img and Mask
+        :param Img: Img array
+        :param Masks: Mask array
+        :return: Final Output of the PEN-Net
+        """
         Masked_Imgs = Masked_Img(Img, Masks)
         Org_Predicted_Imgs = self.Generator.predict([Img2Img_with_mask(Masked_Imgs, Masks), Masks])[0]
         UnMasked_Imgs = Img * (1 - Masks)
@@ -202,10 +221,20 @@ class PENNet:
         return Output
 
     def load_data_norm(self):
+        """
+        Load the normalized data for training and other purposes
+        :return: Normalized Img data
+        """
         Batch_Img = self.data_loader.load_facade()
         return img255_normalization(Batch_Img)
 
     def save_imgs(self, epcho, mask_size):
+        """
+        Save test imgs
+        :param epcho: current epcho(used to generate the img name)
+        :param mask_size: output's mask size
+        :return: None
+        """
         name_g = "generated_epoch_" + str(epcho) + ".png"
         name_decoding = "decoding_epoch_" + str(epcho) + ".png"
         name_real_out = "real_output_epoch_" + str(epcho) + ".png"
@@ -281,15 +310,25 @@ class PENNet:
         plt.imsave(path_realout, np.clip(Output_Img[0], 0, 1), format="png")
 
     def save_model(self):
+        """
+        Save the weights
+        :return: None
+        """
         if not os.path.exists("./models"):  # 如果路径不存在
             os.makedirs("./models")
+        with open("./models/epoch.txt", "w") as f:
+            f.write(str(self.current_epoch))
+
         self.Generator.save_weights('./models/Generator_weights.h5')
         self.Discriminator.save('./models/Discriminator_full.h5')
         self.Combined_Model.save_weights('./models/Combined_Model_weights.h5')
 
     def train(self):
+        """
+        Train the PEN-Net
+        :return:None
+        """
         print("Start_training....")
-
         valid = np.ones(shape=[self.batch_size, 16, 16, 1])
         fake = np.zeros(shape=[self.batch_size, 16, 16, 1])
 
@@ -297,6 +336,7 @@ class PENNet:
         Batch_Img = self.load_data_norm()
         for epoch in range(self.epochs + 1):
             epoch = epoch + self.previous_epoch
+            self.current_epoch = epoch
             try:
                 if Batch_Img == None:
                     Batch_Img = self.load_data_norm()
@@ -334,6 +374,8 @@ class PENNet:
             # If at save interval => save generated image samples
             if epoch % self.save_interval == 0:
                 print("Saving Models....")
+                if self.Is_debug_discri:
+                    self.test_discriminator_output()
                 self.save_imgs(epoch, self.mask_size)
                 if epoch != 0:
                     self.save_model()
@@ -344,9 +386,26 @@ class PENNet:
                     self.mask_size = [128, 128]
 
             Batch_Img = load_thread.get_result()
-    def test_console_app(self,Is_saving=True):
+
+    def test_discriminator_output(self):
+        """
+        Test for the Markovian Discriminator's output
+        :return:None
+        """
+        print("Discriminator's output on real imgs: ", end='')
+        print(np.mean(self.Discriminator.predict(self.load_data_norm())))
+        print("Discriminator's output on real imgs: ", end='')
+        Masked_Img_Batch, Masks = Random_Rectangle_Mask(self.load_data_norm(), self.mask_size)
+        print(np.mean(self.Discriminator.predict(self.Generated_Img(Masked_Img_Batch, Masks))))
+
+    def test_console_app(self, Is_saving=True):
+        """
+        Console app for testing the PEN-Net
+        :param Is_saving:  whether the output should be save
+        :return:None
+        """
         from time import time
-        name_num=0
+        name_num = 0
         print("Start test console app!\n")
         while True:
             a = input("Continue? y/n \n")
@@ -370,13 +429,13 @@ class PENNet:
                             os.makedirs("./generated_Imgs/test_app")
                         plt.imsave("./generated_Imgs/test_app/processed_test_" + str(name_num) + ".png",
                                    np.clip(Output_Img[0], 0, 1))
-                        print("Finished! Used time:"+str(time()-start_time)+"s!\n")
+                        print("Finished! Used time:" + str(time() - start_time) + "s!\n")
                         name_num = name_num + 1
                     else:
                         plt.show()
                 except:
                     print("Invalid input!")
-            elif a=="n":
+            elif a == "n":
                 print("exit")
                 break
             else:
@@ -385,6 +444,10 @@ class PENNet:
 
 
 def Config_GPU():
+    """
+    Config the GPU to prevent memory errors
+    :return: None
+    """
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     tf.keras.backend.set_session(tf.Session(config=config))
@@ -393,5 +456,7 @@ def Config_GPU():
 if __name__ == "__main__":
     Config_GPU()
     pennet = PENNet()
-    # pennet.train()
+    pennet.Is_Auto_Loading = False
+    pennet.Is_debug_discri = True
+    pennet.train()
     pennet.test_console_app()

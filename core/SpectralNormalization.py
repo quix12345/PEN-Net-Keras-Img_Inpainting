@@ -1,6 +1,11 @@
 import numpy as np
 import keras.backend as K
 
+"""
+SpectralNormalization layer in Keras
+"""
+
+
 class SpectralNormalization:
     def __init__(self, layer):
         self.layer = layer

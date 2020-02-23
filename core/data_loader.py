@@ -50,6 +50,14 @@ class data_loader:
 
     def load_facade(self, batch_size=-1, suffix='jpg', path_base="F:/AI_Datasets/CMP_facade_DB_base/base/",
                     path_extended='F:/AI_Datasets/CMP_facade_DB_extended/extended/'):
+        """
+        Load facade data
+        :param batch_size:
+        :param suffix:
+        :param path_base:
+        :param path_extended:
+        :return: loaded data
+        """
         if batch_size == -1:
             batch_size = self.batch_size
         batch_imgs = []

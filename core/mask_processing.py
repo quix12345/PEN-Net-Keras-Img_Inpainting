@@ -4,7 +4,16 @@ import numpy as np
 
 def Random_Rectangle_Mask(img, shape=[128, 128], Is_Centred=False, Is_Random_size=True, Is_square=True,
                           Maximum_smaller_scale=1.5):
-    # Generate ramdom position
+    """
+   Generate Mask at ramdom position
+   :param img: input img
+   :param shape: Mask shape
+   :param Is_Centred: whether the mask is centred
+   :param Is_Random_size: whether the mask used a random size
+   :param Is_square: whether the mask is a square
+   :param Maximum_smaller_scale: A config to generate random size masks,default to be 3
+   :return: Img in the mask
+    """
     batch, x, y, _ = img.shape
     position = []
     if Is_Centred == True:

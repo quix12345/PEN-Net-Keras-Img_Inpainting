@@ -2,12 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="26606e6e-2dc0-4739-9bef-8df7c75c7ce5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PEN-Net-Keras-Img-Inpainting.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PEN-Net-Keras-Img-Inpainting.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PEN-Net.py" beforeDir="false" afterPath="$PROJECT_DIR$/PEN-Net.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/ATN_layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/ATN_layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/SpectralNormalization.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/SpectralNormalization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/data_loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/mask_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/mask_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/multi_thread.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/multi_thread.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated_Imgs/Decoding_Imgs/decoding_epoch_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/generated_Imgs/Decoding_Imgs/decoding_epoch_0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated_Imgs/Real_Output_Imgs/real_output_epoch_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/generated_Imgs/Real_Output_Imgs/real_output_epoch_0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated_Imgs/generated_epoch_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/generated_Imgs/generated_epoch_0.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,12 +21,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PEN-Net.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="349" column="40" selection-start-line="349" selection-start-column="40" selection-end-line="349" selection-end-column="40" />
+            <state relative-caret-position="506">
+              <caret line="462" lean-forward="true" selection-start-line="462" selection-end-line="462" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -30,18 +35,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test-imgs/test9.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_3.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_2.png">
-          <provider selected="true" editor-type-id="images" />
+        <entry file="file://$PROJECT_DIR$/models/epoch.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="5" selection-start-column="5" selection-end-column="5" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -56,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/data_loader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1254">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="195">
+              <caret line="58" column="28" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -66,10 +65,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/SpectralNormalization.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-190">
+              <caret line="8" column="28" lean-forward="true" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/core/ATN_layer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="95">
+              <caret line="5" column="34" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/multi_thread.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="16" selection-start-column="16" selection-end-column="16" />
+            <state relative-caret-position="95">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -77,8 +100,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/mask_processing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+            <state relative-caret-position="-57">
+              <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -86,8 +112,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2749">
-              <caret column="6" selection-start-column="6" selection-end-column="6" />
+            <state relative-caret-position="285">
+              <caret line="164" column="7" lean-forward="true" selection-start-line="155" selection-start-column="3" selection-end-line="164" selection-end-column="7" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -104,8 +133,9 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>Avg_Out</find>
-      <find>save</find>
       <find>Models</find>
+      <find>save</find>
+      <find>Is_trainning</find>
     </findStrings>
     <replaceStrings>
       <replace>generated_Imgs</replace>
@@ -119,19 +149,21 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/core/ATN_layer.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/models/epoch.txt" />
+        <option value="$PROJECT_DIR$/PEN-Net.py" />
+        <option value="$PROJECT_DIR$/core/utils.py" />
         <option value="$PROJECT_DIR$/core/mask_processing.py" />
         <option value="$PROJECT_DIR$/core/multi_thread.py" />
         <option value="$PROJECT_DIR$/core/data_loader.py" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/core/utils.py" />
-        <option value="$PROJECT_DIR$/PEN-Net.py" />
+        <option value="$PROJECT_DIR$/core/SpectralNormalization.py" />
+        <option value="$PROJECT_DIR$/core/ATN_layer.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="85" />
-    <option name="y" value="465" />
+    <option name="x" value="217" />
+    <option name="y" value="22" />
     <option name="width" value="1750" />
     <option name="height" value="980" />
   </component>
@@ -151,13 +183,7 @@
             <path>
               <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
               <item name="PEN-Net-Keras-Img-Inpainting" type="462c0819:PsiDirectoryNode" />
-              <item name="generated_Imgs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PEN-Net-Keras-Img-Inpainting" type="462c0819:PsiDirectoryNode" />
-              <item name="generated_Imgs" type="462c0819:PsiDirectoryNode" />
-              <item name="test_app" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="PEN-Net-Keras-Img-Inpainting" type="b2602c69:ProjectViewProjectNode" />
@@ -178,6 +204,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -237,20 +264,20 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22523117" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22523117" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" weight="0.3286119" />
-      <window_info anchor="bottom" id="Terminal" weight="0.3286119" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3286119" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.41076487" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -261,47 +288,23 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PEN-Net.py</url>
-          <line>38</line>
+          <line>42</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PEN-Net.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PEN-Net.py</url>
+          <line>335</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/core/SpectralNormalization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/ATN_layer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="93" selection-start-line="93" selection-end-line="93" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/mask_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/multi_thread.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="16" selection-start-column="16" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/setup.bat">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -312,22 +315,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/data_loader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1254">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.virtualenvs/PycharmProjects/PEN-Net-Keras-Img-Inpainting/Lib/site-packages/keras/backend/tensorflow_backend.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
           <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test-imgs/test5.png" />
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_2.png" />
+    <entry file="file://$PROJECT_DIR$/test-imgs/test9.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_3.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$USER_HOME$/.virtualenvs/PycharmProjects/PEN-Net-Keras-Img-Inpainting/Lib/site-packages/keras/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -336,34 +340,118 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/utils.py">
+    <entry file="file://$PROJECT_DIR$/models/epoch.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2749">
-          <caret column="6" selection-start-column="6" selection-end-column="6" />
+        <state>
+          <caret column="5" selection-start-column="5" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_0.png">
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_15800.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/test-imgs/test5.png">
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_16800.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_2.png">
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_21600.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/test-imgs/test9.png">
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_21800.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/generated_Imgs/test_app/processed_test_3.png">
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_25600.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_25400.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_25000.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_24600.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_28200.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_28800.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_29800.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_32000.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_31200.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generated_Imgs/generated_epoch_31800.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/PEN-Net.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="349" column="40" selection-start-line="349" selection-start-column="40" selection-end-line="349" selection-end-column="40" />
+        <state relative-caret-position="506">
+          <caret line="462" lean-forward="true" selection-start-line="462" selection-end-line="462" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="164" column="7" lean-forward="true" selection-start-line="155" selection-start-column="3" selection-end-line="164" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/mask_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-57">
+          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/multi_thread.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/data_loader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="58" column="28" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/SpectralNormalization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-190">
+          <caret line="8" column="28" lean-forward="true" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/ATN_layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="34" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
