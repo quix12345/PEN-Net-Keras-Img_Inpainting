@@ -22,20 +22,19 @@ class PENNet:
         """
         self.Is_Auto_Loading = True
         self.Is_Plot_Model = True
-        self.Is_debug_discri=False
+        self.Is_debug_discri = False
         self.dataset_path = "./dataset"
         self.epochs = 1000000
-        self.mask_size = [128, 128]
+        self.mask_size = [30, 30]
         self.img_size = [256, 256, 3]
         self.batch_size = 1
         self.save_interval = 200
-        self.acc_mask_size = 2
+        self.acc_mask_size = 5
         self.mask_update_interval = 500
         self.optimizer = Adam(0.0001, 0.5, 0.999)
         self.loss_weights = [1, 6, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         self.previous_epoch = 0
         self.data_loader = data_loader(self.dataset_path, self.batch_size)
-
 
         # used for ensure the output is valid for the discriminator
         self.Combined_Model, self.Generator, self.Discriminator = self.build_model(
@@ -61,10 +60,10 @@ class PENNet:
             plot_model(self.Generator, to_file='./models/Model_Structure/Generator.png')
             plot_model(self.Discriminator, to_file='./models/Model_Structure/Discriminator.png')
 
-        self.Discriminator.compile(loss='mse',
-                                   optimizer=Adam(0.0001, 0.5, 0.999),
+        self.Discriminator.compile(loss='mae',
+                                   optimizer=self.optimizer,
                                    metrics=['accuracy'])
-        self.Combined_Model.compile(loss=['mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mse'],
+        self.Combined_Model.compile(loss=['mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mae', 'mae'],
                                     loss_weights=self.loss_weights,
                                     optimizer=self.optimizer)
         print("Initializing Models.....")
@@ -96,7 +95,7 @@ class PENNet:
         classifier = Conv2D(1, kernel_size=dkernel_size, strides=1, padding="same")
 
         if use_sigmoid == True:
-            sig = Activation("relu")(x)
+            sig = Activation("sigmoid")(x)
             out = classifier(sig)
         else:
             out = classifier(x)
@@ -175,7 +174,7 @@ class PENNet:
         unmask_out = Lambda(UnMasked_Img_layer)([decoded_out, mask_input])
         Discriminator = self.build_discriminator(img_shape)
         Discriminator.compile(loss='binary_crossentropy',
-                              optimizer=Adam(0.0002, 0.5, 0.999),
+                              optimizer=self.optimizer,
                               metrics=['accuracy'])
         Discriminator.trainable = False  # Combined Model's Discriminator can not be trained
         discrim_out = Discriminator(decoded_out)

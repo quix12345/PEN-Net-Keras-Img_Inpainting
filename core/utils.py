@@ -48,7 +48,7 @@ def Mask_Img_layer(input):
     return tf.multiply(Img, sMask)
 
 
-def Masked_Img(Img, Masks):
+def Masked_Img(Imgs, Masks):
     """
     Generate the masked img
     :param Img: input imgs
@@ -56,7 +56,11 @@ def Masked_Img(Img, Masks):
     :return: masked imgs
     """
     # keep axis[-1]=3
-    return np.clip((Img + Masks), 0, 1)
+    mask=Masks[0,:,:,:]
+    Output_Imgs=[]
+    for img in Imgs:
+        Output_Imgs.append(img*(1-mask)+mask)
+    return np.array(Output_Imgs,dtype=float)
 
 
 def Img2Img_with_mask(Img, Masks):
