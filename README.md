@@ -8,8 +8,17 @@ PEN-Net was rewrited into Keras now!
 which means it is easier to use !
 
 "PEN-Net" is CVPR-2019 paper for Image Inpainting task, see reference for more details!
-* ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/decoding.png?raw=true)
-* ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/demo2.png?raw=true)
+
+## Demo
+PEN-Net Decoding process visualization:
+ ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/decoding.png?raw=true)
+
+Demo2:
+ ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/demo2.png?raw=true)
+
+Notice: This model have some certain unknown issue need to be fixed as it can not produce high quality visual realistic detail, I am trying to fix it currently. 
+If you know waht's the problem, feel free to do the pull request!
+
 ## Requirements
 * scipy==1.1.0
 * pillow
