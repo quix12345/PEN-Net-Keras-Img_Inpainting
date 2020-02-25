@@ -1,23 +1,24 @@
 # PEN-Net   Keras-Master
 ## Image Inpainting task
 
-![PEN-Net](https://github.com/researchmm/PEN-Net-for-Inpainting/blob/master/docs/PEN-Net.gif?raw=true)
+![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/demo.png?raw=true)
 
 ## Introduction
 PEN-Net was rewrited into Keras now! 
 which means it is easier to use !
 
 "PEN-Net" is CVPR-2019 paper for Image Inpainting task, see reference for more details!
-
+* ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/decoding.png?raw=true)
+* ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/demo2.png?raw=true)
 ## Requirements
-scipy==1.1.0
-pillow
-numpy
-tensorflow-gpu
-keras
-matplotlib
+* scipy==1.1.0
+* pillow
+* numpy
+* tensorflow-gpu
+* keras
+* matplotlib
 
-(programed in python 3.6)
+* (programed in python 3.6)
 
 ## Test
 1. put correct model under the "/models" folder
@@ -31,8 +32,8 @@ matplotlib
 3. just do the training by running the program! The model and epcho of saving will be saved directly by PENNet class automatically
 
 ## Reference 
-[Arxiv Paper](https://arxiv.org/abs/1904.07475)
-[Pytorch-version](https://github.com/1900zyh/PEN-Net-for-Inpainting)
+1. [Arxiv Paper](https://arxiv.org/abs/1904.07475)
+2. [Pytorch-version](https://github.com/1900zyh/PEN-Net-for-Inpainting)
 
 ## License
 Licensed under an MIT license.
