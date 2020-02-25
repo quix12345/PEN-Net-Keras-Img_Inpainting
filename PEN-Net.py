@@ -15,6 +15,7 @@ from core.utils import *
 from core.data_loader import *
 
 
+
 class PENNet:
     def __init__(self):
         """
@@ -25,12 +26,12 @@ class PENNet:
         self.Is_debug_discri = False
         self.dataset_path = "./dataset"
         self.epochs = 1000000
-        self.mask_size = [30, 30]
+        self.mask_size = [200, 200]
         self.img_size = [256, 256, 3]
         self.batch_size = 1
         self.save_interval = 200
         self.acc_mask_size = 5
-        self.mask_update_interval = 500
+        self.mask_update_interval = 2000
         self.optimizer = Adam(0.0001, 0.5, 0.999)
         self.loss_weights = [1, 6, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         self.previous_epoch = 0
@@ -201,7 +202,7 @@ class PENNet:
         Masked_Img_Batch_Initialize, Masks_Initialize = Centre_Mask(Batch_Img_Initialize, self.mask_size)
         return self.Generated_Img(Masked_Img_Batch_Initialize, Masks_Initialize)[0]
 
-    def Generated_Img(self, Img, Masks):
+    def Generated_Img(self, Img, Masks,Use_raw=False):
         """
         Generate the final PEN-Net output with the input Img and Mask
         :param Img: Img array
@@ -210,15 +211,18 @@ class PENNet:
         """
         Masked_Imgs = Masked_Img(Img, Masks)
         Org_Predicted_Imgs = self.Generator.predict([Img2Img_with_mask(Masked_Imgs, Masks), Masks])[0]
-        UnMasked_Imgs = Img * (1 - Masks)
-        Output = Org_Predicted_Imgs * Masks + UnMasked_Imgs
-        # plt.imshow(Org_Predicted_Imgs[0])
-        # plt.figure()
-        # plt.imshow(UnMasked_Imgs[0])
-        # plt.figure()
-        # plt.imshow((Org_Predicted_Imgs*Masks)[0])
-        # plt.show()
-        return Output
+        if Use_raw:
+            return  Org_Predicted_Imgs
+        else:
+            UnMasked_Imgs = Img * (1 - Masks)
+            Output = Org_Predicted_Imgs * Masks + UnMasked_Imgs
+            # plt.imshow(Org_Predicted_Imgs[0])
+            # plt.figure()
+            # plt.imshow(UnMasked_Imgs[0])
+            # plt.figure()
+            # plt.imshow((Org_Predicted_Imgs*Masks)[0])
+            # plt.show()
+            return Output
 
     def load_data_norm(self):
         """
@@ -355,8 +359,9 @@ class PENNet:
             # use a advanced model to generate mask instead of the simple centre mask one
             Masked_Img_Batch, Masks = Random_Rectangle_Mask(Batch_Img, self.mask_size)
             # Masked_Img_Batch, Masks=Centre_Mask(Batch_Img, mask_size)
-            Fake_img = self.Generated_Img(Masked_Img_Batch, Masks)
-            # Fake_img=Generator.predict(Img2Img_with_mask(Masked_Img_Batch,Masks), Masks)[0]
+
+            Fake_img = self.Generated_Img(Masked_Img_Batch, Masks,Use_raw=True)
+
             Resized_Imgs = Pyramidal_Img_Resize(Batch_Img)
 
             # D_loss_real = Discriminator.train_on_batch(Batch_Img, valid)
@@ -395,7 +400,7 @@ class PENNet:
         """
         print("Discriminator's output on real imgs: ", end='')
         print(np.mean(self.Discriminator.predict(self.load_data_norm())))
-        print("Discriminator's output on real imgs: ", end='')
+        print("Discriminator's output on fake imgs: ", end='')
         Masked_Img_Batch, Masks = Random_Rectangle_Mask(self.load_data_norm(), self.mask_size)
         print(np.mean(self.Discriminator.predict(self.Generated_Img(Masked_Img_Batch, Masks))))
 
@@ -461,3 +466,17 @@ if __name__ == "__main__":
     pennet.Is_debug_discri = True
     pennet.train()
     pennet.test_console_app()
+    
+```
+The code was rewrittened by Quix into Keras, a student studying in a normal high school in China.
+
+Reference:
+
+@inproceedings{yan2019PENnet,
+  author = {Zeng, Yanhong and Fu, Jianlong and Chao, Hongyang and Guo, Baining},
+  title = {Learning Pyramid-Context Encoder Network for High-Quality Image Inpainting},
+  booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={1486--1494},
+  year = {2019}
+}
+```
