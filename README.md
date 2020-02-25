@@ -19,8 +19,8 @@ Demos:
 
 ![PEN-Net](https://github.com/qxdnfsy/PEN-Net-Keras-Img_Inpainting/blob/master/demo/demo2.png?raw=true)
 
-Notice: This model have some certain unknown issue need to be fixed as it can not produce high quality visual realistic detail, I am trying to fix it currently. 
-If you know waht's the problem, feel free to do the pull request!  
+Notice: This model havs some unknown issue which need to be fixed as PEN-Net(Keras) can not produce high quality visual realistic details, I am trying to fix it currently. 
+If you know what's the problem, feel free to do the pull request!  
 
 ## Requirements
 * scipy==1.1.0
