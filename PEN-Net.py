@@ -421,7 +421,7 @@ class PENNet:
                     img = np.array(scipy.misc.imread(img_path, mode='RGB').astype(np.float))
                     start_time = time()
                     img = scipy.misc.imresize(img, self.img_size)
-                    input_img, input_mask = GenerateValidInputImg(img)
+                    input_img, input_mask = GenerateValidInputImg(img,self.batch_size)
                     input_img = np.clip((input_img + 5 * input_mask), 0, 1)
                     # plt.imshow(input_mask[0,:,:,0],cmap="gray")
                     # plt.show()
@@ -464,10 +464,10 @@ if __name__ == "__main__":
     pennet = PENNet()
     pennet.Is_Auto_Loading = False
     pennet.Is_debug_discri = True
-    pennet.train()
+    # pennet.train()
     pennet.test_console_app()
     
-```
+"""
 The code was rewrittened by Quix into Keras, a student studying in a normal high school in China.
 
 Reference:
@@ -479,4 +479,4 @@ Reference:
   pages={1486--1494},
   year = {2019}
 }
-```
+"""

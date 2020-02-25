@@ -215,7 +215,7 @@ def Resize_Img(img, ll_scale_factor=1.5):
     return scipy.misc.imresize(img, new_img_size)
 
 
-def GenerateValidInputImg(img,lower_limit = 220):
+def GenerateValidInputImg(img,batch_size=1,lower_limit = 220):
     """
     Used to generate valid input for the PEN-Net for testing
     :param img: raw data
@@ -224,7 +224,6 @@ def GenerateValidInputImg(img,lower_limit = 220):
     """
     mask_postions = []
     img_size = [256, 256]
-    batch_size = 8
     r = 0
     while r < img_size[0]:
         l = 0
