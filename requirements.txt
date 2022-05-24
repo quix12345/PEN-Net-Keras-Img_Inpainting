@@ -1,6 +1,6 @@
 scipy==1.1.0
 pillow
 numpy
-tensorflow-gpu==1.15.2
+tensorflow-gpu==2.6.4
 keras
 matplotlib
