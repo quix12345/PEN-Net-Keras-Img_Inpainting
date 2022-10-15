@@ -45,7 +45,7 @@ If you know what's the problem, feel free to do the pull request!
 
 ## Reference 
 1. [Arxiv Paper](https://arxiv.org/abs/1904.07475)
-2. [Pytorch-version](https://github.com/1900zyh/PEN-Net-for-Inpainting)
+2. [Pytorch-version](https://github.com/researchmm/PEN-Net-for-Inpainting)
 
 ## License
 Licensed under an MIT license.
